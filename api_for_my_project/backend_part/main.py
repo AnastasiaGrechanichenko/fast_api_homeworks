@@ -1,5 +1,6 @@
 
 from fastapi import FastAPI,HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -11,6 +12,14 @@ from schemas import CreateCartItem, CartItemResponse, CartResponse, UpdateCartRe
     BookResponse
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = ["http://localhost:5173"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
 
 @app.post("/create-all_tables")
 async def create_all_tables():
@@ -44,7 +53,7 @@ async def create_user(data:CreateUser):
     await conn.close()
     return response
 
-@app.post("/books/{book_id}")
+@app.post("/books")
 async def create_book(data: CreateBook):
     conn = await engine.connect()
     session = AsyncSession(conn)
@@ -272,13 +281,17 @@ async def clear_cart(user_id:int):
 
     stmt = (select(CartItem).where(CartItem.user_id==user_id))
     result = await session.execute(stmt)
-    cart_item = result.scalar_one_or_none()
-    await session.delete(cart_item)
+    items = result.scalars().all()
+
+    if not items:
+        await conn.close()
+        return {"message":"Корзина уже пуста"}
+
+    for item in items:
+        await session.delete(item)
+
     await session.commit()
     await conn.close()
-    return {
-        "message":"Корзина очищена"
-    }
-
+    return {"message":"Корзина очищена"}
 
 run(app)
