@@ -5,6 +5,7 @@ from .book import Book
 from .cart import CartItem
 from .favorite import Favorite
 from .order import Order, OrderItem
+from .login_session import LoginSession
 
 
 __all__= [
@@ -15,4 +16,5 @@ __all__= [
     "Favorite",
     "Order",
     "OrderItem",
+    "LoginSession",
 ]

@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class Book(Base):
     __tablename__ = "books"
@@ -10,3 +10,6 @@ class Book(Base):
     old_price: Mapped[int]
     image: Mapped[str]
     category:Mapped[str]
+
+    cart_items: Mapped[list["CartItem"]] = relationship(back_populates="book")
+    favorites: Mapped[list["Favorite"]] = relationship(back_populates="book")

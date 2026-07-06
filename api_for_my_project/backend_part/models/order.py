@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import ForeignKey
 
 from database import Base
@@ -10,10 +12,12 @@ class Order(Base):
     user_id:Mapped[int] = mapped_column(ForeignKey("store_users.id"))
     total_sum:Mapped[int]
     total_discount: Mapped[int]
-    created_at: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    status: Mapped[str] = mapped_column(default="pending")
+
 
     user: Mapped["User"] = relationship(back_populates="orders")
-    items: Mapped[list["Orderitem"]] = relationship(back_populates="order")
+    items: Mapped[list["OrderItem"]] = relationship(back_populates="order")
 
 
 class OrderItem(Base):
