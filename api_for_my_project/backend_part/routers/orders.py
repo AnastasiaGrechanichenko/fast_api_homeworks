@@ -30,6 +30,7 @@ def build_order_response(order):
         user_id = order.user_id,
         total_sum = order.total_sum,
         total_discount = order.total_discount,
+        status = order.status,
         created_at = order.created_at,
         items = [build_order_item_response(item) for item in order.items],
     )
@@ -101,12 +102,13 @@ async def get_user_orders (
         user: Annotated[User,Depends(get_authenticated_user)],
 ):
 
-    stmt = (select(Order)
-            .options(joinedload(Order.items))
-            .where(Order.user_id==user.id)
+    stmt = (
+        select(Order)
+        .options(joinedload(Order.items))
+        .where(Order.user_id==user.id)
             )
     result = await session.execute(stmt)
-    orders = result.scalars().all()
+    orders = result.unique().scalars().all()
 
     response = [build_order_response(order) for order in orders]
     return response
@@ -123,7 +125,7 @@ async def get_order(
         .where(Order.id == order_id, Order.user_id==user.id)
     )
     result = await session.execute(stmt)
-    order = result.scalar_one_or_none()
+    order = result.unique().scalar_one_or_none()
 
     if not order:
         raise HTTPException(status_code=404, detail="Заказ не найден ")
@@ -139,7 +141,7 @@ async def cancel_order(
 ):
 
 
-    stmt = select(Order).where(Order.id == order_id, Order.user.id == user.id)
+    stmt = select(Order).where(Order.id == order_id, Order.user_id == user.id)
     result = await session.execute(stmt)
     order = result.scalar_one_or_none()
 
@@ -151,7 +153,7 @@ async def cancel_order(
 
     if order.status in ("shipped", "delivered"):
         raise HTTPException(status_code=400, detail="Заказ не может быть отменен")
-    order.status = "canceled"
+    order.status = "cancelled"
     await session.commit()
 
     stmt = (
@@ -160,7 +162,7 @@ async def cancel_order(
         .where(Order.id == order_id)
     )
     result = await session.execute(stmt)
-    order_with_items = result.scalar_one()
+    order_with_items = result.unique().scalar_one()
 
     return build_order_response(order_with_items)
 
