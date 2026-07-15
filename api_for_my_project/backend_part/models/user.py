@@ -11,6 +11,7 @@ class User(Base):
     age: Mapped[int]
     login:Mapped[str]=mapped_column(unique=True)
     password_hash: Mapped[str]
+    email: Mapped[str|None] = mapped_column(default=None)
 
     cart_items: Mapped[list["CartItem"]] = relationship(back_populates="user")
     orders: Mapped[list["Order"]] = relationship(back_populates="user")
