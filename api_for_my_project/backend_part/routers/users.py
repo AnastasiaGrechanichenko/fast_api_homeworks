@@ -8,7 +8,8 @@ from argon2 import PasswordHasher
 from database import engine, Base
 from dependencies import get_session, get_authenticated_user
 from models import User
-from schemas import CreateUser, UserResponse
+from schemas import CreateUser, UserResponse,UpdateUser
+
 
 router = APIRouter()
 
@@ -41,7 +42,9 @@ async def create_user(
         id=new_user.id,
         login=new_user.login,
         name=new_user.name,
-        age=new_user.age)
+        age=new_user.age,
+        email=new_user.email
+    )
     
     return response
 
@@ -53,9 +56,38 @@ async def get_current_user(
         id = user.id,
         login=user.login,
         name=user.name,
-        age = user.age
+        age = user.age,
+        email=user.email
     )
     return response
+
+@router.patch("/users/me",
+              response_model = UserResponse)
+async def update_user(
+        data: UpdateUser,
+        user:Annotated[User,Depends(get_authenticated_user)],
+        session: Annotated[AsyncSession, Depends(get_session)],
+):
+    if data.email is not None:
+        user.email=data.email
+
+    if data.name is not None:
+        user.name=data.name
+
+    if data.age is not None:
+        user.age=data.age
+
+    await session.commit()
+
+    response = UserResponse(
+        id=user.id,
+        login=user.login,
+        name=user.name,
+        age=user.age,
+        email=user.email)
+    return response
+
+
 
 
 
