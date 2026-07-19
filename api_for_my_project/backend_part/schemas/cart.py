@@ -19,6 +19,7 @@ class CartItemResponse(BaseModel):
     author: str
     price: int
     old_price: int
+    image: str
     quantity:int
 
     @computed_field
