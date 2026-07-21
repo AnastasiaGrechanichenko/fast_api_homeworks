@@ -81,7 +81,7 @@ async def create_user_order(
             quantity=item.quantity,
             discount_amount = (item.book.old_price - item.book.price) * item.quantity,
         )
-    session.add(order_item)
+        session.add(order_item)
     await session.execute(delete(CartItem)
                           .where(CartItem.user_id==user.id))
     await session.commit()

@@ -8,6 +8,7 @@ class CreateBook(BaseModel):
     old_price: int
     image: str
     category: str
+    description: str|None = None
 
 class BookResponse(BaseModel):
     id: int
@@ -17,3 +18,4 @@ class BookResponse(BaseModel):
     old_price: int
     image: str
     category: str
+    description: str | None = None

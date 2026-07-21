@@ -19,6 +19,7 @@ def build_book_response(book):
         old_price=book.old_price,
         image=book.image,
         category=book.category,
+        description = book.description,
     )
 
 @router.post("/books")

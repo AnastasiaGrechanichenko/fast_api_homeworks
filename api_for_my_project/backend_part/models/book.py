@@ -10,6 +10,7 @@ class Book(Base):
     old_price: Mapped[int]
     image: Mapped[str]
     category:Mapped[str]
+    description: Mapped[str|None]=mapped_column(default=None)
 
     cart_items: Mapped[list["CartItem"]] = relationship(back_populates="book")
     favorites: Mapped[list["Favorite"]] = relationship(back_populates="book")
