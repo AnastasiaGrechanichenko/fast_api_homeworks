@@ -1,4 +1,5 @@
 from datetime import datetime
+from email.policy import default
 
 from sqlalchemy import ForeignKey
 
@@ -14,6 +15,13 @@ class Order(Base):
     total_discount: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     status: Mapped[str] = mapped_column(default="pending")
+
+    recipient_name:Mapped[str]=mapped_column(nullable=True,default="")
+    phone:Mapped[str]=mapped_column(nullable=True,default="")
+    address:Mapped[str]=mapped_column(nullable=True,default="")
+
+    payment_status:Mapped[str]=mapped_column(nullable=True,default="pending")
+
 
 
     user: Mapped["User"] = relationship(back_populates="orders")
