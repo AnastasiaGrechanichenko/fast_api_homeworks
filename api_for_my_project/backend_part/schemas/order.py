@@ -22,4 +22,17 @@ class OrderResponse(BaseModel):
     status: str
     created_at: datetime
     items: List[OrderItemResponse]
+    recipient_name:str
+    phone:str
+    address:str
+    payment_status:str
+
+
+
+
+class CreateOrderRequest(BaseModel):
+    recipient_name: str=""
+    phone:str=""
+    address:str=""
+    payment_status:str="pending"
 

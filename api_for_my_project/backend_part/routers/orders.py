@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 from dependencies import get_session, get_authenticated_user
 from models import CartItem, Order, OrderItem, User
-from schemas import OrderItemResponse, OrderResponse
+from schemas import OrderItemResponse, OrderResponse,CreateOrderRequest
 
 router = APIRouter()
 
@@ -37,6 +37,7 @@ def build_order_response(order):
 
 @router.post("/orders")
 async def create_user_order(
+        body:CreateOrderRequest,
         session: Annotated[AsyncSession, Depends(get_session)],
         user: Annotated[User,Depends(get_authenticated_user)],
         ):
@@ -65,7 +66,11 @@ async def create_user_order(
         total_sum = total,
         total_discount = total_discount,
         status="pending",
-        created_at = datetime.now()
+        created_at = datetime.now(),
+        recipient_name=body.recipient_name,
+        phone=body.phone,
+        address=body.address,
+        payment_status=body.payment_status
     )
     session.add(new_order)
     await session.flush()
