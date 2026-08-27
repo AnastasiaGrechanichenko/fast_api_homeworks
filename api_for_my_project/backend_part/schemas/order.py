@@ -22,10 +22,11 @@ class OrderResponse(BaseModel):
     status: str
     created_at: datetime
     items: List[OrderItemResponse]
-    recipient_name:str
-    phone:str
-    address:str
-    payment_status:str
+    recipient_name:str|None=None
+    phone:str|None=None
+    address:str|None=None
+    payment_status:str|None=None
+    comment:str|None=None
 
 
 
@@ -35,4 +36,6 @@ class CreateOrderRequest(BaseModel):
     phone:str=""
     address:str=""
     payment_status:str="pending"
+    comment: str | None = None
+
 

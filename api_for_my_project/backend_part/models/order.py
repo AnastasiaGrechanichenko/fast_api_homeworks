@@ -22,6 +22,7 @@ class Order(Base):
 
     payment_status:Mapped[str]=mapped_column(nullable=True,default="pending")
 
+    comment:Mapped[str]=mapped_column(nullable=True,default="")
 
 
     user: Mapped["User"] = relationship(back_populates="orders")

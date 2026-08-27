@@ -33,6 +33,11 @@ def build_order_response(order):
         status = order.status,
         created_at = order.created_at,
         items = [build_order_item_response(item) for item in order.items],
+        recipient_name=order.recipient_name,
+        phone=order.phone,
+        address=order.address,
+        comment=order.comment,
+        payment_status=order.payment_status
     )
 
 @router.post("/orders")
@@ -70,6 +75,7 @@ async def create_user_order(
         recipient_name=body.recipient_name,
         phone=body.phone,
         address=body.address,
+        comment=body.comment,
         payment_status=body.payment_status
     )
     session.add(new_order)

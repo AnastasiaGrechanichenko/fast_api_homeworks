@@ -9,6 +9,7 @@ class CreateUser(BaseModel):
     name: str = Field(..., min_length=1, max_length=50)
     age: int = Field(...,ge=0, le=120)
     email: Optional[EmailStr] = None
+    contact_number: Optional[str] = None
 
 
 class UserResponse(BaseModel):
@@ -17,6 +18,7 @@ class UserResponse(BaseModel):
     name: str
     age: int
     email: Optional[EmailStr]=None
+    contact_number: Optional[str] = None
 
 class LogineSessionResponse(BaseModel):
     user_id: int
@@ -26,3 +28,4 @@ class UpdateUser(BaseModel):
     email:Optional[EmailStr] = None
     name:Optional[str] = None
     age:Optional[int] = None
+    contact_number: Optional[str] = None

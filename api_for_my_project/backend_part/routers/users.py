@@ -34,6 +34,8 @@ async def create_user(
         password_hash= password_hash,
         name = data.name,
         age = data.age,
+        email= data.email,
+        contact_number=data.contact_number
     )
     session.add(new_user)
     await session.commit()
@@ -43,7 +45,8 @@ async def create_user(
         login=new_user.login,
         name=new_user.name,
         age=new_user.age,
-        email=new_user.email
+        email=new_user.email,
+        contact_number=new_user.contact_number,
     )
     
     return response
@@ -57,7 +60,8 @@ async def get_current_user(
         login=user.login,
         name=user.name,
         age = user.age,
-        email=user.email
+        email=user.email,
+        contact_number=user.contact_number
     )
     return response
 
@@ -77,6 +81,9 @@ async def update_user(
     if data.age is not None:
         user.age=data.age
 
+    if data.contact_number is not None:
+        user.contact_number=data.contact_number
+
     await session.commit()
 
     response = UserResponse(
@@ -84,7 +91,10 @@ async def update_user(
         login=user.login,
         name=user.name,
         age=user.age,
-        email=user.email)
+        email=user.email,
+        contact_number =user.contact_number
+
+    )
     return response
 
 
