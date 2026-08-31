@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: bookstore-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 142536
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+  app:
+    build: ./backend_part
+    container_name: bookstore-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL : postgresql+asyncpg://postgres:142536@db:5432/postgres
+    volumes :
+      - ./backend_part:/app
+volumes:
+  postgres_data:
+
