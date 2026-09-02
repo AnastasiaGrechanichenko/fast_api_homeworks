@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 3
   app:
-    build: ./backend_part
+    build: ./bookstore_backend
     container_name: bookstore-app
     ports:
       - "8000:8000"
@@ -26,7 +26,7 @@ services:
     environment:
       DATABASE_URL : postgresql+asyncpg://postgres:142536@db:5432/postgres
     volumes :
-      - ./backend_part:/app
+      - ./bookstore_backend:/app
 volumes:
   postgres_data:
 
